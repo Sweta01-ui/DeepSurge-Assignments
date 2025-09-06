@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+    input[type="text"], input[type="email"] {
+      padding: 8px;
+      width: 250px;
+      margin: 5px 0;
+      display: block;
+    }
+
+    button {
+      padding: 8px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .error {
+      color: red;
+      margin-bottom: 10px;
+    }
+
+    ul {
+      list-style-type: disc;
+    }
+
+    li {
+      margin: 5px 0;
+    }
+
+    .student-entry {
+      color: green;
+    }
+
+    .student-email {
+      color: blue;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Add Student</h2>
+
+  <form id="studentForm">
+    <input type="text" id="fullName" placeholder="Full Name" />
+    <input type="email" id="email" placeholder="Email Address" />
+    <button type="submit">Add Student</button>
+    <div class="error" id="errorMsg"></div>
+  </form>
+
+  <ul id="studentList"></ul>
+
+  <script>
+    const form = document.getElementById('studentForm');
+    const fullNameInput = document.getElementById('fullName');
+    const emailInput = document.getElementById('email');
+    const studentList = document.getElementById('studentList');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault(); // Prevent form reload
+
+      const fullName = fullNameInput.value.trim();
+      const email = emailInput.value.trim();
+
+      // Basic validation
+      if (!fullName || !email) {
+        errorMsg.textContent = 'Both fields are required.';
+        return;
+      }
+
+      if (!email.includes('@')) {
+        errorMsg.textContent = 'Invalid email format (missing @).';
+        return;
+      }
+
+      // If valid, clear error
+      errorMsg.textContent = '';
+
+      // Create and add student entry
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="student-entry">Name: ${fullName}, Email: <span class="student-email">${email}</span></span>`;
+      studentList.appendChild(li);
+
+      // Clear the form
+      fullNameInput.value = '';
+      emailInput.value = '';
+    });
+  </script>
+
+</body>
+</html>
