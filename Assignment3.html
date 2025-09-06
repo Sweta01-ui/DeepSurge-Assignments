@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f2f2f2;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+    input[type="text"], input[type="tel"] {
+      padding: 10px;
+      margin: 5px;
+      width: 250px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    #search {
+      width: 520px;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      background: #fff;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Contact Manager</h2>
+
+  <form id="contactForm">
+    <input type="text" id="fullName" placeholder="Full Name" required />
+    <input type="tel" id="phoneNumber" placeholder="Phone Number" required />
+    <button type="submit">Add Contact</button>
+  </form>
+
+  <input type="text" id="search" placeholder="Search Contacts..." />
+
+  <ul id="contactList"></ul>
+
+  <script>
+    const form = document.getElementById('contactForm');
+    const fullNameInput = document.getElementById('fullName');
+    const phoneNumberInput = document.getElementById('phoneNumber');
+    const contactList = document.getElementById('contactList');
+    const searchInput = document.getElementById('search');
+
+    let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+
+    // Display contacts on page load
+    window.onload = () => {
+      renderContacts(contacts);
+    };
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = fullNameInput.value.trim();
+      const phone = phoneNumberInput.value.trim();
+
+      if (!name || !/^\d+$/.test(phone)) {
+        alert('Please enter a valid name and a digits-only phone number.');
+        return;
+      }
+
+      const contact = { name, phone };
+      contacts.push(contact);
+      localStorage.setItem('contacts', JSON.stringify(contacts));
+      renderContacts(contacts);
+
+      form.reset();
+    });
+
+    function renderContacts(contactArray) {
+      contactList.innerHTML = '';
+      contactArray.forEach((c, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${c.name} – ${c.phone}`;
+        contactList.appendChild(li);
+      });
+    }
+
+    searchInput.addEventListener('input', function() {
+      const query = this.value.toLowerCase();
+      const filtered = contacts.filter(c =>
+        c.name.toLowerCase().includes(query) || c.phone.includes(query)
+      );
+      renderContacts(filtered);
+    });
+  </script>
+
+</body>
+</html>
